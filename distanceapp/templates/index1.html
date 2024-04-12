@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Distance and Price Calculator</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD93qoCB26S_lMTscd_f6U3douwQ8Cm0Bo&libraries=places&callback=initAutocomplete" async defer></script>
+</head>
+<body>
+    <div class="container mt-4">
+        <h2>Calculate Route Details</h2>
+        <form id="route-form" class="mt-3">
+            <div class="form-group">
+                <label for="origin-input">Origin</label>
+                <input id="origin-input" class="form-control" type="text" placeholder="Enter origin" required>
+            </div>
+            <div class="form-group">
+                <label for="destination-input">Destination</label>
+                <input id="destination-input" class="form-control" type="text" placeholder="Enter destination" required>
+            </div>
+            <button class="btn btn-primary btn-block" type="submit">Calculate</button>
+        </form>
+        <div id="result" class="mt-4"></div>
+    </div>
+
+    <script>
+        function initAutocomplete() {
+            var options = {
+                types: ['establishment'],
+                componentRestrictions: {country: 'AE'}
+            };
+
+            new google.maps.places.Autocomplete(document.getElementById('origin-input'), options);
+            new google.maps.places.Autocomplete(document.getElementById('destination-input'), options);
+        }
+
+        document.getElementById('route-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            calculateDistanceAndDisplayMap();
+        });
+
+        function calculateDistanceAndDisplayMap() {
+            var origin = document.getElementById('origin-input').value;
+            var destination = document.getElementById('destination-input').value;
+            var resultDiv = document.getElementById('result');
+
+            if (!origin || !destination) {
+                resultDiv.innerHTML = `<div class="alert alert-warning">Both origin and destination are required.</div>`;
+                return;
+            }
+
+            resultDiv.innerHTML = `<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>`;
+
+            var params = new URLSearchParams();
+            params.append('origin', origin);
+            params.append('destination', destination);
+
+            fetch('/distance/calculate_distance', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: JSON.stringify({
+                        origin: origin,
+                        destination: destination
+            })
+            .then(response => response.ok ? response.json() : Promise.reject('Failed to load'))
+            .then(data => {
+                resultDiv.innerHTML = `
+                    <div class="alert alert-success">
+                        <h4>Route Details</h4>
+                        <p><strong>Distance:</strong> ${data.distance}</p>
+                        <p><strong>Duration:</strong> ${data.duration}</p>
+                        <p><strong>Price:</strong> AED ${data.price}</p>
+                        <img src="${data.map_url}" class="img-fluid" alt="Route Map">
+                    </div>`;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                resultDiv.innerHTML = `<div class="alert alert-danger">Failed to calculate route details.</div>`;
+            });
+        }
+
+                  function getCookie(name) {
+                      let cookieValue = null;
+                      if (document.cookie && document.cookie !== '') {
+                          const cookies = document.cookie.split(';');
+                          for (let i = 0; i < cookies.length; i++) {
+                              let cookie = cookies[i].trim();
+                              // Does this cookie string begin with the name we want?
+                              if (cookie.startsWith(name + '=')) {
+                                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                  break;
+                              }
+                          }
+                      }
+                      return cookieValue;
+                  }
+
+        }
+    </script>
+</body>
+</html>
