@@ -20,7 +20,7 @@ This guide will walk you through the steps to host a Django project on an Amazon
 
 Install Python 3 and pip:
 
-bash
+```bash
 Copy code
 sudo apt install python3 python3-pip
 Install additional dependencies:
