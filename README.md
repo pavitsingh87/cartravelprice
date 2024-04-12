@@ -21,39 +21,39 @@ This guide will walk you through the steps to host a Django project on an Amazon
 Install Python 3 and pip:
 
 ```bash
-Copy code
 sudo apt install python3 python3-pip
+
 Install additional dependencies:
 
 ## Step 3: Prepare Your Django Project
 Navigate to the desired directory and create a folder for your Django project:
 
-bash
-Copy code
+```bash
 sudo mkdir djangoproject
+
 cd djangoproject/
+
 Set appropriate permissions:
 
-bash
-Copy code
+```bash
 sudo chown -R ubuntu:ubuntu djangoproject
+
 Clone your Django project or copy your project files into the djangoproject directory.
 
 Create and activate a virtual environment:
 
-bash
-Copy code
+```bash
 python3 -m venv venv
 source venv/bin/activate
+
 Install project dependencies:
 
-bash
-Copy code
+```bash
 pip install -r requirements.txt
+
 Run database migrations:
 
-bash
-Copy code
+```bash
 python manage.py migrate
 
 ## Step 4: Run the Django Server
