@@ -24,12 +24,12 @@ SECRET_KEY = 'django-insecure-ydgto5x0k7!0+82q9e++qlti4(+j@x+)7^-j^83-$x(o(=%$+7
 # settings.py
 
 # Google Maps API key
-GOOGLE_MAPS_API_KEY = 'AIzaSyD93qoCB26S_lMTscd_f6U3douwQ8Cm0Bo'
+GOOGLE_MAPS_API_KEY = ''
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 #
-ALLOWED_HOSTS = ['192.168.1.37', 'localhost', '127.0.0.1','86.96.19.114']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 #CSRF_TRUSTED_ORIGINS = ['192.168.1.37']
 CSRF_COOKIE_SECURE = True
